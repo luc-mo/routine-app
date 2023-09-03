@@ -27,4 +27,14 @@ describe('Instantiate session entity', () => {
 	test('should throw an error if subject is not a valid uuid', () => {
 		expect(() => new Session({ ...VALID_SESSION, sub: '123' })).toThrow(InvalidSessionError)
 	})
+
+	test('should throw an error if issuer is not a string', () => {
+		// @ts-expect-error
+		expect(() => new Session({ ...VALID_SESSION, iss: 123 })).toThrow(InvalidSessionError)
+	})
+
+	test('should throw an error if issuer does not have the valid length', () => {
+		expect(() => new Session({ ...VALID_SESSION, iss: 'ab' })).toThrow(InvalidSessionError)
+		expect(() => new Session({ ...VALID_SESSION, iss: 'abcdefghijklmnop' })).toThrow(InvalidSessionError)
+	})
 })

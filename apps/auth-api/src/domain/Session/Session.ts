@@ -9,6 +9,7 @@ export class Session implements SessionEntity {
 
 	constructor({ sub, iss, iat, exp, aud }: SessionEntity) {
 		this._assertSubject(sub)
+		this._assertIssuer(iss)
 		this._sub = sub
 		this._iss = iss
 		this._iat = iat
@@ -37,8 +38,14 @@ export class Session implements SessionEntity {
 	}
 
 	private _assertSubject(subject: unknown) {
-		if (!this._isString(subject) || !this._isValidUuid(subject)) {
+		if (!this._isValidUuid(subject)) {
 			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_SUBJECT)
+		}
+	}
+
+	private _assertIssuer(issuer: unknown) {
+		if (!this._isValidLength(issuer)) {
+			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_ISSUER)
 		}
 	}
 
@@ -50,5 +57,10 @@ export class Session implements SessionEntity {
 		if (!this._isString(uuid)) return false
 		const uuidRegex = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 		return uuidRegex.test(uuid as string)
+	}
+
+	private _isValidLength(value: unknown) {
+		if (!this._isString(value)) return false
+		return (value as string).length >= 3 && (value as string).length <= 15
 	}
 }
