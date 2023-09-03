@@ -37,4 +37,14 @@ describe('Instantiate session entity', () => {
 		expect(() => new Session({ ...VALID_SESSION, iss: 'ab' })).toThrow(InvalidSessionError)
 		expect(() => new Session({ ...VALID_SESSION, iss: 'abcdefghijklmnop' })).toThrow(InvalidSessionError)
 	})
+
+	test('should throw an error if expiration is not a number', () => {
+		// @ts-expect-error
+		expect(() => new Session({ ...VALID_SESSION, exp: '123' })).toThrow(InvalidSessionError)
+	})
+
+	test('should throw an error if expiration is not a positive number', () => {
+		expect(() => new Session({ ...VALID_SESSION, exp: -1 })).toThrow(InvalidSessionError)
+		expect(() => new Session({ ...VALID_SESSION, exp: 0.1 })).toThrow(InvalidSessionError)
+	})
 })

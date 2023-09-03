@@ -10,6 +10,7 @@ export class Session implements SessionEntity {
 	constructor({ sub, iss, iat, exp, aud }: SessionEntity) {
 		this._assertSubject(sub)
 		this._assertIssuer(iss)
+		this._assertExpiration(exp)
 		this._sub = sub
 		this._iss = iss
 		this._iat = iat
@@ -49,8 +50,18 @@ export class Session implements SessionEntity {
 		}
 	}
 
+	private _assertExpiration(expiration: unknown) {
+		if (!this._isPositiveInteger(expiration)) {
+			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_EXPIRATION)
+		}
+	}
+
 	private _isString(value: unknown) {
 		return typeof value === 'string'
+	}
+
+	private _isNumber(value: unknown) {
+		return typeof value === 'number'
 	}
 
 	private _isValidUuid(uuid: unknown) {
@@ -62,5 +73,10 @@ export class Session implements SessionEntity {
 	private _isValidLength(value: unknown) {
 		if (!this._isString(value)) return false
 		return (value as string).length >= 3 && (value as string).length <= 15
+	}
+
+	private _isPositiveInteger(value: unknown) {
+		if (!this._isNumber(value)) return false
+		return Number.isFinite(value) && Number.isInteger(value) && (value as number) >= 0
 	}
 }
