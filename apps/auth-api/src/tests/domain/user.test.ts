@@ -25,7 +25,7 @@ describe('Instantiate user entity', () => {
 		// @ts-expect-error
 		expect(() => new User({ ...VALID_USER, id: 123 })).toThrow(InvalidUserError)
 		expect(() => {
-			const user = new User({ ...VALID_USER })
+			const user = new User(VALID_USER)
 			// @ts-expect-error
 			user.id = 123
 		}).toThrow(InvalidUserError)
@@ -34,7 +34,7 @@ describe('Instantiate user entity', () => {
 	test('should throw an error if id is not a valid uuid', () => {
 		expect(() => new User({ ...VALID_USER, id: '123' })).toThrow(InvalidUserError)
 		expect(() => {
-			const user = new User({ ...VALID_USER })
+			const user = new User(VALID_USER)
 			user.id = '123'
 		}).toThrow(InvalidUserError)
 	})
@@ -43,7 +43,7 @@ describe('Instantiate user entity', () => {
 		// @ts-expect-error
 		expect(() => new User({ ...VALID_USER, email: 123 })).toThrow(InvalidUserError)
 		expect(() => {
-			const user = new User({ ...VALID_USER })
+			const user = new User(VALID_USER)
 			// @ts-expect-error
 			user.email = 123
 		}).toThrow(InvalidUserError)
@@ -52,8 +52,34 @@ describe('Instantiate user entity', () => {
 	test('should throw an error if email is not a valid email', () => {
 		expect(() => new User({ ...VALID_USER, email: '123' })).toThrow(InvalidUserError)
 		expect(() => {
-			const user = new User({ ...VALID_USER })
+			const user = new User(VALID_USER)
 			user.email = '123'
+		}).toThrow(InvalidUserError)
+	})
+
+	test('should throw an error if username is not a string', () => {
+		// @ts-expect-error
+		expect(() => new User({ ...VALID_USER, username: 123 })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User(VALID_USER)
+			// @ts-expect-error
+			user.username = 123
+		}).toThrow(InvalidUserError)
+	})
+
+	test('should throw an error if username has less than 4 characters', () => {
+		expect(() => new User({ ...VALID_USER, username: 'abc' })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User(VALID_USER)
+			user.username = 'abc'
+		}).toThrow(InvalidUserError)
+	})
+
+	test('should throw an error if username has more than 25 characters', () => {
+		expect(() => new User({ ...VALID_USER, username: 'abcdefghijklmnopqrstuvwxyz' })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User(VALID_USER)
+			user.username = 'abcdefghijklmnopqrstuvwxyz'
 		}).toThrow(InvalidUserError)
 	})
 })
