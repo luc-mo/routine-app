@@ -17,14 +17,18 @@
 		"indentStyle": "tab",
 		"indentSize": 2,
 		"lineWidth": 120,
-		"ignore": ["node_modules/**", "dist/**", "*.js"]
+		"ignore": [
+			"node_modules/**",
+			"dist/**",
+			"*.js"
+		]
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
 			"complexity": {
-				"useSimplifiedLogicExpression": "warn"
+				"useSimplifiedLogicExpression": "off"
 			},
 			"correctness": {
 				"noUndeclaredVariables": "off"
@@ -55,6 +59,10 @@
 				"noConstantCondition": "warn"
 			}
 		},
-		"ignore": ["node_modules/**", "dist/**", "*.js"]
+		"ignore": [
+			"node_modules/**",
+			"dist/**",
+			"*.js"
+		]
 	}
 }

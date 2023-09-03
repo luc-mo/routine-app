@@ -37,9 +37,18 @@ export class Session implements SessionEntity {
 	}
 
 	private _assertSubject(subject: unknown) {
-		const uuidRegex = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i
-		if (typeof subject !== 'string' || !uuidRegex.test(subject)) {
+		if (!this._isString(subject) || !this._isValidUuid(subject)) {
 			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_SUBJECT)
 		}
+	}
+
+	private _isString(value: unknown) {
+		return typeof value === 'string'
+	}
+
+	private _isValidUuid(uuid: unknown) {
+		if (!this._isString(uuid)) return false
+		const uuidRegex = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i
+		return uuidRegex.test(uuid as string)
 	}
 }
