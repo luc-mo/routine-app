@@ -9,7 +9,7 @@ describe('Instantiate user entity', () => {
 		password: 'mypassword',
 		createdAt: 123456789,
 		updatedAt: 123456789,
-		salt: 'mysalt',
+		salt: 'abcdefghijklmnop',
 	}
 
 	test('should be a function', () => {
