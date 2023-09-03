@@ -1,3 +1,5 @@
+import { InvalidUserError, InvalidUserErrorMessages } from './errors/invalidUserError'
+
 export class User implements UserEntity {
 	private _id: string
 	private _email: string
@@ -8,6 +10,7 @@ export class User implements UserEntity {
 	private _updatedAt: number
 
 	constructor({ id, email, username, password, salt, createdAt, updatedAt }: UserEntity) {
+		this._assertId(id)
 		this._id = id
 		this._email = email
 		this._username = username
@@ -48,6 +51,7 @@ export class User implements UserEntity {
 
 	// Setters
 	set id(value: string) {
+		this._assertId(value)
 		this._id = value
 	}
 
@@ -73,5 +77,21 @@ export class User implements UserEntity {
 
 	set updatedAt(value: number) {
 		this._updatedAt = value
+	}
+
+	private _assertId(id: unknown) {
+		if (!this._isValidUuid(id)) {
+			throw new InvalidUserError(InvalidUserErrorMessages.INVALID_ID)
+		}
+	}
+
+	private _isString(value: unknown) {
+		return typeof value === 'string'
+	}
+
+	private _isValidUuid(uuid: unknown) {
+		if (!this._isString(uuid)) return false
+		const uuidRegex = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i
+		return uuidRegex.test(uuid as string)
 	}
 }

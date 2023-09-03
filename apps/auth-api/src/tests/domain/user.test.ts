@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { User } from 'domain/User'
+import { User, InvalidUserError } from 'domain/User'
 
 describe('Instantiate user entity', () => {
 	const VALID_USER: UserEntity = {
@@ -19,5 +19,23 @@ describe('Instantiate user entity', () => {
 	test('should return an object', () => {
 		const user = new User(VALID_USER)
 		expect(typeof user).toBe('object')
+	})
+
+	test('should throw an error if id is not a string', () => {
+		// @ts-expect-error
+		expect(() => new User({ ...VALID_USER, id: 123 })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User({ ...VALID_USER })
+			// @ts-expect-error
+			user.id = 123
+		}).toThrow(InvalidUserError)
+	})
+
+	test('should throw an error if id is not a valid uuid', () => {
+		expect(() => new User({ ...VALID_USER, id: '123' })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User({ ...VALID_USER })
+			user.id = '123'
+		}).toThrow(InvalidUserError)
 	})
 })
