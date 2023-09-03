@@ -1,9 +1,9 @@
 import { describe, test, expect } from 'vitest'
-import { Session } from 'domain/Session'
+import { Session, InvalidSessionError } from 'domain/Session'
 
 describe('Instantiate session entity', () => {
 	const VALID_SESSION: SessionEntity = {
-		sub: '123',
+		sub: '11111111-1111-1111-1111-111111111111',
 		iss: 'auth-api',
 		exp: 1234567890,
 		iat: 1234567890,
@@ -17,5 +17,14 @@ describe('Instantiate session entity', () => {
 	test('should return an object', () => {
 		const session = new Session(VALID_SESSION)
 		expect(typeof session).toBe('object')
+	})
+
+	test('should throw an error if subject is not a string', () => {
+		// @ts-expect-error
+		expect(() => new Session({ ...VALID_SESSION, sub: 123 })).toThrow(InvalidSessionError)
+	})
+
+	test('should throw an error if subject is not a valid uuid', () => {
+		expect(() => new Session({ ...VALID_SESSION, sub: '123' })).toThrow(InvalidSessionError)
 	})
 })
