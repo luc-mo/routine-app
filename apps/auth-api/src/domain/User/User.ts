@@ -14,6 +14,7 @@ export class User implements UserEntity {
 		this._assertEmail(email)
 		this._assertUsername(username)
 		this._assertPassword(password)
+		this._assertSalt(salt)
 		this._id = id
 		this._email = email
 		this._username = username
@@ -74,6 +75,7 @@ export class User implements UserEntity {
 	}
 
 	set salt(value: string) {
+		this._assertSalt(value)
 		this._salt = value
 	}
 
@@ -109,6 +111,12 @@ export class User implements UserEntity {
 		}
 	}
 
+	private _assertSalt(salt: unknown) {
+		if (!this._isValidSaltLength(salt)) {
+			throw new InvalidUserError(InvalidUserErrorMessages.INVALID_SALT)
+		}
+	}
+
 	private _isString(value: unknown) {
 		return typeof value === 'string'
 	}
@@ -133,5 +141,10 @@ export class User implements UserEntity {
 	private _isValidPasswordLength(password: unknown) {
 		if (!this._isString(password)) return false
 		return (password as string).length >= 9
+	}
+
+	private _isValidSaltLength(salt: unknown) {
+		if (!this._isString(salt)) return false
+		return (salt as string).length >= 16
 	}
 }

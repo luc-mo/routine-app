@@ -100,4 +100,22 @@ describe('Instantiate user entity', () => {
 			user.password = '123'
 		}).toThrow(InvalidUserError)
 	})
+
+	test('should throw an error if salt is not a string', () => {
+		// @ts-expect-error
+		expect(() => new User({ ...VALID_USER, salt: 123 })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User(VALID_USER)
+			// @ts-expect-error
+			user.salt = 123
+		}).toThrow(InvalidUserError)
+	})
+
+	test('should throw an error if salt has less than 16 characters', () => {
+		expect(() => new User({ ...VALID_USER, salt: '123' })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User(VALID_USER)
+			user.salt = '123'
+		}).toThrow(InvalidUserError)
+	})
 })
