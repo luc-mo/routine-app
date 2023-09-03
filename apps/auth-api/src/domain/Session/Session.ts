@@ -12,6 +12,7 @@ export class Session implements SessionEntity {
 		this._assertIssuer(iss)
 		this._assertIssuedAt(iat)
 		this._assertExpiration(exp)
+		this._assertAudience(aud)
 		this._sub = sub
 		this._iss = iss
 		this._iat = iat
@@ -60,6 +61,12 @@ export class Session implements SessionEntity {
 	private _assertExpiration(expiration: unknown) {
 		if (!this._isPositiveInteger(expiration)) {
 			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_EXPIRATION)
+		}
+	}
+
+	private _assertAudience(audience: unknown) {
+		if (!this._isValidLength(audience)) {
+			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_AUDIENCE)
 		}
 	}
 

@@ -57,4 +57,14 @@ describe('Instantiate session entity', () => {
 		expect(() => new Session({ ...VALID_SESSION, exp: -1 })).toThrow(InvalidSessionError)
 		expect(() => new Session({ ...VALID_SESSION, exp: 0.1 })).toThrow(InvalidSessionError)
 	})
+
+	test('should throw an error if audience is not a string', () => {
+		// @ts-expect-error
+		expect(() => new Session({ ...VALID_SESSION, aud: 123 })).toThrow(InvalidSessionError)
+	})
+
+	test('should throw an error if audience does not have the valid length', () => {
+		expect(() => new Session({ ...VALID_SESSION, aud: 'ab' })).toThrow(InvalidSessionError)
+		expect(() => new Session({ ...VALID_SESSION, aud: 'abcdefghijklmnop' })).toThrow(InvalidSessionError)
+	})
 })
