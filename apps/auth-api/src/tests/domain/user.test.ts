@@ -82,4 +82,22 @@ describe('Instantiate user entity', () => {
 			user.username = 'abcdefghijklmnopqrstuvwxyz'
 		}).toThrow(InvalidUserError)
 	})
+
+	test('should throw an error if password is not a string', () => {
+		// @ts-expect-error
+		expect(() => new User({ ...VALID_USER, password: 123 })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User(VALID_USER)
+			// @ts-expect-error
+			user.password = 123
+		}).toThrow(InvalidUserError)
+	})
+
+	test('should throw an error if password has less than 9 characters', () => {
+		expect(() => new User({ ...VALID_USER, password: '123' })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User(VALID_USER)
+			user.password = '123'
+		}).toThrow(InvalidUserError)
+	})
 })

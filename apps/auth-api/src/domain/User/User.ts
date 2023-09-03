@@ -13,6 +13,7 @@ export class User implements UserEntity {
 		this._assertId(id)
 		this._assertEmail(email)
 		this._assertUsername(username)
+		this._assertPassword(password)
 		this._id = id
 		this._email = email
 		this._username = username
@@ -68,6 +69,7 @@ export class User implements UserEntity {
 	}
 
 	set password(value: string) {
+		this._assertPassword(value)
 		this._password = value
 	}
 
@@ -101,6 +103,12 @@ export class User implements UserEntity {
 		}
 	}
 
+	private _assertPassword(password: unknown) {
+		if (!this._isValidPasswordLength(password)) {
+			throw new InvalidUserError(InvalidUserErrorMessages.INVALID_PASSWORD)
+		}
+	}
+
 	private _isString(value: unknown) {
 		return typeof value === 'string'
 	}
@@ -120,5 +128,10 @@ export class User implements UserEntity {
 	private _isValidUsernameLength(username: unknown) {
 		if (!this._isString(username)) return false
 		return (username as string).length >= 4 && (username as string).length <= 25
+	}
+
+	private _isValidPasswordLength(password: unknown) {
+		if (!this._isString(password)) return false
+		return (password as string).length >= 9
 	}
 }
