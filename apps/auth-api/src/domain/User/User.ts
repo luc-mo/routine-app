@@ -11,6 +11,7 @@ export class User implements UserEntity {
 
 	constructor({ id, email, username, password, salt, createdAt, updatedAt }: UserEntity) {
 		this._assertId(id)
+		this._assertEmail(email)
 		this._id = id
 		this._email = email
 		this._username = username
@@ -56,6 +57,7 @@ export class User implements UserEntity {
 	}
 
 	set email(value: string) {
+		this._assertEmail(value)
 		this._email = value
 	}
 
@@ -85,6 +87,12 @@ export class User implements UserEntity {
 		}
 	}
 
+	private _assertEmail(email: unknown) {
+		if (!this._isValidEmail(email)) {
+			throw new InvalidUserError(InvalidUserErrorMessages.INVALID_EMAIL)
+		}
+	}
+
 	private _isString(value: unknown) {
 		return typeof value === 'string'
 	}
@@ -93,5 +101,11 @@ export class User implements UserEntity {
 		if (!this._isString(uuid)) return false
 		const uuidRegex = /^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 		return uuidRegex.test(uuid as string)
+	}
+
+	private _isValidEmail(email: unknown) {
+		if (!this._isString(email)) return false
+		const emailRegex = /^[a-z0-9._-]{3,}@[a-z0-9.-]{3,}\.[a-z]{2,}$/i
+		return emailRegex.test(email as string)
 	}
 }

@@ -38,4 +38,22 @@ describe('Instantiate user entity', () => {
 			user.id = '123'
 		}).toThrow(InvalidUserError)
 	})
+
+	test('should throw an error if email is not a string', () => {
+		// @ts-expect-error
+		expect(() => new User({ ...VALID_USER, email: 123 })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User({ ...VALID_USER })
+			// @ts-expect-error
+			user.email = 123
+		}).toThrow(InvalidUserError)
+	})
+
+	test('should throw an error if email is not a valid email', () => {
+		expect(() => new User({ ...VALID_USER, email: '123' })).toThrow(InvalidUserError)
+		expect(() => {
+			const user = new User({ ...VALID_USER })
+			user.email = '123'
+		}).toThrow(InvalidUserError)
+	})
 })
