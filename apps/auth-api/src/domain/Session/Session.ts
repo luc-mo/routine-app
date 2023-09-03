@@ -10,6 +10,7 @@ export class Session implements SessionEntity {
 	constructor({ sub, iss, iat, exp, aud }: SessionEntity) {
 		this._assertSubject(sub)
 		this._assertIssuer(iss)
+		this._assertIssuedAt(iat)
 		this._assertExpiration(exp)
 		this._sub = sub
 		this._iss = iss
@@ -47,6 +48,12 @@ export class Session implements SessionEntity {
 	private _assertIssuer(issuer: unknown) {
 		if (!this._isValidLength(issuer)) {
 			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_ISSUER)
+		}
+	}
+
+	private _assertIssuedAt(issuedAt: unknown) {
+		if (!this._isPositiveInteger(issuedAt)) {
+			throw new InvalidSessionError(InvalidSessionErrorMessages.INVALID_ISSUED_AT)
 		}
 	}
 
