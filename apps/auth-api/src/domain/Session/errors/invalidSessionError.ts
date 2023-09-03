@@ -6,5 +6,5 @@ export class InvalidSessionError extends Error {
 }
 
 export enum InvalidSessionErrorMessages {
-	INVALID_SUBJECT = 'Property "sub" must be a string in UUID format',
+	INVALID_SUBJECT = 'Property "sub" is required and must be a string in UUID format',
 }
